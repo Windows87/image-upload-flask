@@ -11,10 +11,14 @@ body {
   flex-direction: column;
 }
 
-img {
+h1 {
   width: 80%;
   max-width: 600px;
   margin-bottom: 48px;
+}
+
+img {
+  width: 100%;
 }
 
 form {
