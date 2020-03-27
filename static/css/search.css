@@ -42,6 +42,11 @@ main {
   flex-wrap: wrap;
 }
 
+main span {
+  font-weight: bold;
+  font-size: 20px;
+}
+
 .image {
   width: calc(33% - 16px);
   height: 300px;

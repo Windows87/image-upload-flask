@@ -15,12 +15,15 @@ def get(searchType, search):
       i = Image.query.filter(Image.name.like('%' + search + '%')).all()
     elif(searchType == 'type'):
       i = Image.query.filter(Image.type.like('%' + search + '%')).all()
+    elif(searchType == 'id'):
+      i = Image.query.filter_by(id=search).one()
     else:
       return jsonify(
         error = "Invalid search type",
       ), 400
 
     return jsonify(i)
+
 
 @app.route('/api/images/', methods = ['POST'])
 def post():

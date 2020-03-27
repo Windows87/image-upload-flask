@@ -16,6 +16,10 @@ def index():
 def upload():
     return send_from_directory('../static', 'image.html')
 
+@app.route('/images/<image>')
+def images(image):
+    return send_from_directory('../images', image)
+
 @app.route('/<path:path>')
 def serve(path):
     return send_from_directory('../static', path)
