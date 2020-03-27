@@ -1,0 +1,44 @@
+input[type="text"], select {
+  border: 1px solid gray;
+  color: gray;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: Roboto;
+  transition: 0.5s all;
+}
+  
+input[type="text"]:focus, select:focus, input[type="text"]:hover, select:hover {
+  color: black;
+  border-color: black;
+}
+
+input[type="text"] {
+  padding-left: 8px;
+  height: 45px;
+}
+
+input[type="submit"] {
+  border: 0;
+  border-radius: 8px;
+  font-size: 17px;
+  font-family: Roboto;
+  font-weight: bold;
+  height: 40px;
+  width: 80%;
+  background-color: gray;
+  color: white;
+  margin-top: 16px;
+  transition: 0.5s background-color;
+}
+  
+input[type="submit"]:hover {
+  background-color: black;
+}
+  
+*:focus {
+  outline: none;
+}
+
+input[type="file"] {
+  display: none;
+}
