@@ -20,9 +20,9 @@
 # Clone this repository
 git clone https://github.com/Windows87/image-upload-flask/
 # Go into repository
-cd image-upload-flas
+cd image-upload-flask
 # Install dependencies
-pip install -r requirements.txt
+pip install -r requeriments.txt
 # Start
 python run.py
 ```
