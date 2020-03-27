@@ -14,6 +14,7 @@
 
 ## How to Run
 1. Start MySQL
+2. Import image-upload-flask.sql to MySQL
 2. Run:
 ```bash
 # Clone this repository
