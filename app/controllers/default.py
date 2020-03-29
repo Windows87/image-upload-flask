@@ -85,7 +85,7 @@ def minning():
     if(i + 1 > ignoreOffset):
       value = values[i]
       im = Image.open(urllib.request.urlopen(value['urls']['regular']))
-      insertIntoDatabase(value['alt_description'], sentence, im)
+      insertIntoDatabase(value['alt_description'] or sentence, sentence, im)
 
   return jsonify(
     successfull = True
