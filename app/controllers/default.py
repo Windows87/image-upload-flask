@@ -1,22 +1,39 @@
 import os
 import time
+import requests
+import json
+import math
+
+from PIL import Image
+import urllib
 
 from random import randrange
 from flask import jsonify, request
 from app import app, db
 
+from app.models.tables import ImageModel
 
-from app.models.tables import Image
+def insertIntoDatabase(name, type, image):
+    millis = int(round(time.time() * 1000))
+    filename = str(millis) + '_' + str(randrange(millis)) + '.png'
+
+    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+    i = ImageModel(name, type, filename)
+    db.session.add(i)
+    db.session.commit()
+
+    return jsonify(i)
 
 @app.route('/api/images/<searchType>/<search>/', methods = ['GET'])
 def get(searchType, search):
 
     if(searchType == 'name'):
-      i = Image.query.filter(Image.name.like('%' + search + '%')).all()
+      i = ImageModel.query.filter(ImageModel.name.like('%' + search + '%')).all()
     elif(searchType == 'type'):
-      i = Image.query.filter(Image.type.like('%' + search + '%')).all()
+      i = ImageModel.query.filter(ImageModel.type.like('%' + search + '%')).all()
     elif(searchType == 'id'):
-      i = Image.query.filter_by(id=search).one()
+      i = ImageModel.query.filter_by(id=search).one()
     else:
       return jsonify(
         error = "Invalid search type",
@@ -32,19 +49,48 @@ def post():
     name = request.form['name']
     type = request.form['type']
     image = request.files['image']
-    filename = str(millis) + '_' + str(randrange(millis)) + '.png'
 
-    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return insertIntoDatabase(name, type, image)
 
-    i = Image(name, type, filename)
-    db.session.add(i)
-    db.session.commit()
+@app.route('/api/images/minning', methods = ['POST'])
+def minning():
+  sentence = request.form['sentence']
+  number = int(request.form['number'])
+  ignoreOffset = 0
 
-    return jsonify(i)
+  if "ignoreOffset" in request.form:
+    ignoreOffset = int(request.form['ignoreOffset'])
+
+  url = "https://unsplash.com/napi/search/photos?query=" + sentence + "&xp=&per_page=20&page=" + str(math.ceil(number + ignoreOffset/20))
+
+  headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'}
+  result = requests.get(url, headers=headers)
+  content = result.content
+
+  values = json.loads(content)
+  values = values['results']
+
+  rangeNumber = number + ignoreOffset
+  numberOfPhotos = len(values)
+
+  if(number > numberOfPhotos):
+    rangeNumber = numberOfPhotos
+
+  for i in range(rangeNumber):
+    if(i + 1 > ignoreOffset):
+      value = values[i]
+      im = Image.open(urllib.request.urlopen(value['links']['download']))
+      insertIntoDatabase(value['alt_description'], sentence, im)
+
+  return jsonify(
+    successfull = True
+  )  
+  
+
 
 @app.route('/api/images/<int:id>', methods = ['PUT'])
 def put(id):
-    i = Image.query.filter_by(id=id).one()
+    i = ImageModel.query.filter_by(id=id).one()
 
     if "name" in request.form:
         i.name = request.form['name']
@@ -58,7 +104,7 @@ def put(id):
 
 @app.route('/api/images/<int:id>', methods = ['DELETE'])
 def delete(id):
-    Image.query.filter_by(id=id).delete()
+    ImageModel.query.filter_by(id=id).delete()
     db.session.commit()
     return jsonify(
       successfull = True

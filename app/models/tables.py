@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from app import db
 
 @dataclass
-class Image(db.Model):
+class ImageModel(db.Model):
     __tablename__ = "images"
 
     id: int
