@@ -41,7 +41,7 @@ form {
   justify-content: center;
 }
 
-input[type="text"] {
+input[type="text"], input[type="number"] {
   border: 1px solid gray;
   margin: 8px;
   border-radius: 8px;
