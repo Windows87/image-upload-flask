@@ -61,14 +61,19 @@ def minning():
   if "ignoreOffset" in request.form:
     ignoreOffset = int(request.form['ignoreOffset'])
 
-  url = "https://unsplash.com/napi/search/photos?query=" + sentence + "&xp=&per_page=20&page=" + str(math.ceil(number + ignoreOffset/20))
+  pages = math.ceil(number + ignoreOffset/20)
+  values = []
 
-  headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'}
-  result = requests.get(url, headers=headers)
-  content = result.content
+  for i in range(pages):
+    url = "https://unsplash.com/napi/search/photos?query=" + sentence + "&xp=&per_page=20&page=" + str()
 
-  values = json.loads(content)
-  values = values['results']
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'}
+    result = requests.get(url, headers=headers)
+    content = result.content
+
+    valuesB = json.loads(content)
+    valuesB = valuesB['results']
+    values = values + valuesB
 
   rangeNumber = number + ignoreOffset
   numberOfPhotos = len(values)
