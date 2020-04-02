@@ -1,2 +1,5 @@
 __pycache__
-images/*
+images/*.png
+images/*.jpg
+images/*.jpeg
+images/*.gif
